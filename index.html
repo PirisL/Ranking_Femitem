@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rankings - FEMITEM</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        /* --- PALETA NEÓN EQUILIBRADA Y VARIADA --- */
+        :root {
+            --bg-principal: #000000;       
+            --bg-tarjeta: #121212;         
+            --bg-celda: #1a1a1a;           
+            --neon-azul: #00f0ff;          
+            --neon-verde: #39ff14;         
+            --neon-violeta: #bd00ff;       
+            --neon-naranja: #ffaa00;       
+            --texto-blanco: #ffffff;       
+            --texto-gris: #aaaaaa;         
+            --borde-neon: #2a2a2a;         
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-blanco);
+            padding-bottom: 90px;
+        }
+
+        header {
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--neon-azul);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            background: #050505;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--texto-blanco);
+        }
+
+        header p {
+            font-size: 0.8rem;
+            color: var(--neon-azul);
+            margin-top: 0.2rem;
+            letter-spacing: 2px;
+        }
+
+        /* --- MENÚ INFERIOR --- */
+        nav {
+            background-color: rgba(0, 0, 0, 0.95);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            border-top: 2px solid var(--borde-neon);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-around;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--texto-gris);
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s ease;
+        }
+
+        .nav-btn .material-symbols-outlined {
+            font-size: 1.4rem;
+            margin-bottom: 2px;
+        }
+
+        .nav-btn.active {
+            color: var(--neon-azul);
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+        }
+
+        /* --- CONTENIDO --- */
+        main {
+            max-width: 800px; /* Ajuste para que en PC no se vea tan vacío */
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .panel {
+            background: var(--bg-tarjeta);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid var(--borde-neon);
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: var(--neon-azul);
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-text { color: var(--texto-gris); font-size: 0.9rem; line-height: 1.4; }
+        
+        /* --- SECCIÓN FECHAS VARIADA --- */
+        .tabla-info { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+        .tabla-info td { padding: 0.7rem 0.4rem; border-bottom: 1px solid var(--borde-neon); font-size: 0.85rem; }
+        .td-label { color: var(--texto-blanco); font-weight: 500; }
+        .td-value-calendario { text-align: right; color: var(--neon-naranja); font-weight: 500; }
+        .fecha-pasada { color: #444444 !important; } 
+
+        /* --- DECORACIONES INICIO --- */
+        .noticia-item {
+            border-left: 3px solid var(--neon-azul);
+            padding-left: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        .noticia-fecha { font-size: 0.75rem; color: var(--neon-verde); font-weight: bold; letter-spacing: 0.5px; }
+        .podio-lista { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
+        .podio-item { 
+            display: flex; justify-content: space-between; background: var(--bg-celda); 
+            padding: 0.5rem 0.8rem; border-radius: 4px; font-size: 0.85rem;
+            border: 1px solid #222;
+        }
+        .podio-oro { color: #ffd700; font-weight: bold; }
+
+        /* --- BUSCADOR Y FILTROS --- */
+        .search-block { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .search-field {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--borde-neon);
+            border-radius: 4px;
+            background: #000000;
+            color: #ffffff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .search-field:focus { border-color: var(--neon-azul); box-shadow: 0 0 8px rgba(0, 240, 255, 0.3); }
+        .btn-search {
+            background-color: var(--neon-azul); color: #000000; border: none; padding: 0 1.2rem;
+            border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* --- TARJETAS DE RANKING VARIADAS Y UNIFICADAS --- */
+        .cards-output { margin-bottom: 1rem; min-height: 50px; }
+        .data-card {
+            background: #161616;              
+            padding: 1.2rem; 
+            border-radius: 8px;
+            margin-bottom: 1.2rem;            
+            border: 2px solid #333333;        
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .data-card.individual-card { border-left: 5px solid var(--neon-violeta); }
+        .data-card.dobles-card { border-left: 5px solid var(--neon-azul); }
+        
+        .data-card h3 { font-size: 1.1rem; margin-bottom: 0.8rem; color: #ffffff; letter-spacing: 0.5px; }
+        
+        .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; text-align: center; }
+        .data-cell { 
+            background: var(--bg-celda); 
+            padding: 0.6rem 0.4rem; 
+            border-radius: 6px; 
+            border: 1px solid #252525; 
+        }
+        .cell-title { font-size: 0.65rem; color: var(--texto-gris); display: block; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.5px; }
+        .cell-value { font-size: 0.95rem; font-weight: bold; color: #ffffff; }
+        .cell-value.posicion-fija { color: var(--neon-verde); text-shadow: 0 0 5px rgba(57, 255, 20, 0.3); }
+        
+        .team-info {
+            grid-column: span 3; color: var(--neon-azul);
+            font-size: 0.8rem; padding: 0.4rem; margin-top: 0.4rem; font-weight: bold;
+            text-align: center; border-top: 1px dashed #333; text-transform: uppercase;
+        }
+
+        .status-message { color: var(--texto-gris); padding: 1.5rem; text-align: center; font-size: 0.9rem; }
+
+        /* --- BOTONES DE CATEGORÍAS --- */
+        .matrix-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+        .btn-matrix {
+            background-color: #161616; color: #ffffff; border: 1px solid #333;
+            padding: 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; text-align: center; transition: 0.2s;
+        }
+        .btn-matrix:hover { border-color: var(--neon-azul); color: var(--neon-azul); background: #1a1a1a; }
+        .matrix-section { grid-column: span 2; font-size: 0.7rem; color: var(--neon-azul); margin: 0.6rem 0 0.2rem 0; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+
+        /* --- BOTONES DE DESCARGA --- */
+        .descarga-container { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.8rem; }
+        .btn-descarga {
+            flex: 1; background: #111; border: 1px solid var(--borde-neon); color: #fff;
+            padding: 0.8rem; font-size: 0.85rem; border-radius: 4px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 0.6rem; transition: 0.2s;
+        }
+        .btn-descarga:hover { border-color: var(--neon-verde); color: var(--neon-verde); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>FEMITEM</h1>
+        <p>RANKINGS ACTUALIZADOS</p>
+    </header>
+
+    <main>
+        <div id="inicio" class="tab-content active">
+            <div class="panel">
+                <h2><span class="material-symbols-outlined">info</span>Estado de Tablas</h2>
+                <div class="noticia-item">
+                    <span class="noticia-fecha">ÚLTIMA ACTUALIZACIÓN: 24/05/2026</span>
+                    <p class="panel-text">Los rankings reflejan los puntos oficiales computados hasta el último torneo disputado.</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2><span class="material-symbols-outlined">workspace_premium</span>Cuadro de Honor (Última Fecha)</h2>
+                <div class="podio-lista">
+                    <div class="podio-item"><span class="td-label">🥇 TC Primera</span><span class="podio-oro">Mathieu Boyer</span></div>
+                    <div class="podio-item"><span class="td-label">🥇 TC Damas</span><span class="podio-oro">Macarena Karlen</span></div>
+                    <div class="podio-item"><span class="td-label">🥇 Dobles Primera</span><span class="podio-oro">Lopez / Martina</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="buscador" class="tab-content">
+            <div class="panel" id="panelBuscador">
+                <h2>Buscar Jugador o Dupla</h2>
+                <div class="search-block">
+                    <input type="text" id="searchInput" class="search-field" placeholder="Escriba el apellido..." onkeydown="if(event.key === 'Enter') ejecutarBusqueda()">
+                    <button class="btn-search" onclick="ejecutarBusqueda()">
+                        <span class="material-symbols-outlined">search</span>
+                    </button>
+                </div>
+                <div class="cards-output" id="resultContainer">
+                    <div class="status-message">Seleccione una categoría abajo o busque por apellido para ver las posiciones.</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Categorías</h2>
+                <div class="matrix-grid">
+                    <div class="matrix-section">Caballeros</div>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('TC PRIMERA')">TC Primera</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('SEGUNDA')">Segunda</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('TERCERA')">Tercera</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('CUARTA')">Cuarta</button>
+                    
+                    <div class="matrix-section">Damas</div>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('TC DAMAS (PRIMERA)')">TC Damas (Primera)</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('DAMAS SEGUNDA')">Damas Segunda</button>
+                    
+                    <div class="matrix-section">Dobles</div>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('DOBLES PRIMERA')">Dobles Primera</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('DOBLES SEGUNDA')">Dobles Segunda</button>
+                    
+                    <div class="matrix-section">Formativas</div>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('SUB 9')">Sub 9</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('SUB 11')">Sub 11</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('SUB 13')">Sub 13</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('SUB 15')">Sub 15</button>
+                    <button class="btn-matrix" style="grid-column: span 2;" onclick="filtrarPorCategoria('SUB 29')">Sub 29</button>
+                    
+                    <div class="matrix-section">Senior / Maxi</div>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('MAXI 30')">Maxi 30</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('MAXI 30 DAMAS')">Maxi 30 Damas</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('MAXI 40')">Maxi 40</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('MAXI 40 DAMAS')">Maxi 40 Damas</button>
+                    <button class="btn-matrix" style="grid-column: span 2;" onclick="filtrarPorCategoria('MAXI 50 CABALLEROS')">Maxi 50 Caballeros</button>
+
+                    <div class="matrix-section">Adaptado</div>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('ADAPTADOS (INTELECTUAL)')">Adaptados (Intelectual)</button>
+                    <button class="btn-matrix" onclick="filtrarPorCategoria('ADAPTADO (MOTRIZ PARADO)')">Adaptado (Motriz Parado)</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2><span class="material-symbols-outlined">download</span>Documentación</h2>
+                <p class="panel-text">Descargá el reglamento oficial o el ranking en formato PDF.</p>
+                <div class="descarga-container">
+                    <button class="btn-descarga" onclick="window.open('https://drive.google.com/file/d/1WZ9rTfiQ0HmODL_YC9ZfuSPYA-Gs5SCK/view?usp=drivesdk', '_blank')">
+                        <span class="material-symbols-outlined">picture_as_pdf</span> Descargar Reglamento
+                    </button>
+                    <button class="btn-descarga" onclick="window.open('https://drive.google.com/file/d/1Q9mnUKOCTCXxu4g6KAYCwG9YHsTMipKf/view?usp=drivesdk', '_blank')">
+                        <span class="material-symbols-outlined">picture_as_pdf</span> Descargar Ranking
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="calendario" class="tab-content">
+            <div class="panel">
+                <h2>Calendario Oficial 2026</h2>
+                <p class="panel-text" style="margin-bottom: 0.8rem; color: var(--neon-naranja);">Torneos Misioneros "Tierra Colorada"</p>
+                <table class="tabla-info">
+                    <tr class="fecha-pasada">
+                        <td class="td-label fecha-pasada">25 y 26 de Abril</td>
+                        <td class="td-value-calendario fecha-pasada">Escuela Municipal de Oberá</td>
+                    </tr>
+                    <tr class="fecha-pasada">
+                        <td class="td-label fecha-pasada">16 y 17 de Mayo</td>
+                        <td class="td-value-calendario fecha-pasada">Escuela Municipal de Montecarlo</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">18 y 19 de Julio</td>
+                        <td class="td-value-calendario">Centro Cultural Paraguayo de Puerto Rico</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">22 y 23 de Agosto</td>
+                        <td class="td-value-calendario">Escuela Municipal de Leandro N. Alem</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">19 y 20 de Septiembre</td>
+                        <td class="td-value-calendario">ASDAI - ATMP de Posadas</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">3 y 4 Octubre</td>
+                        <td class="td-value-calendario">Escuela municipal de Campo Grande</td>
+                    </tr>
+                    <tr>
+                        <td class="td-label">7 y 8 Noviembre</td>
+                        <td class="td-value-calendario">Club Unión Dorada de Eldorado</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <nav>
+        <div class="nav-container">
+            <button class="nav-btn active" onclick="cambiarPestana('inicio', this)">
+                <span class="material-symbols-outlined">home</span>Inicio
+            </button>
+            <button class="nav-btn" onclick="cambiarPestana('buscador', this)">
+                <span class="material-symbols-outlined">emoji_events</span>Rankings
+            </button>
+            <button class="nav-btn" onclick="cambiarPestana('calendario', this)">
+                <span class="material-symbols-outlined">calendar_month</span>Fechas
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        function cambiarPestana(tabId, botonActivo) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            botonActivo.classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function normalizarCadenaTexto(cadena) {
+            return cadena
+                .toLowerCase()
+                .trim()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, ""); 
+        }
+
+        const baseDatosRanking = [
+            {nombre: "WURIAN ANTONIO", cat: "ADAPTADOS (INTELECTUAL)", pos: "1", pts: 480},
+            {nombre: "ALEGRE BRUNO", cat: "ADAPTADOS (INTELECTUAL)", pos: "2", pts: 380},
+            {nombre: "BOGADO OSCAR", cat: "ADAPTADOS (INTELECTUAL)", pos: "3", pts: 300},
+            {nombre: "SOSCNIKE IAN", cat: "ADAPTADOS (INTELECTUAL)", pos: "4", pts: 300},
+            {nombre: "CZABAN PABLO", cat: "ADAPTADOS (INTELECTUAL)", pos: "5", pts: 240},
+            {nombre: "CARMARINO LUCAS", cat: "ADAPTADO (MOTRIZ PARADO)", pos: "1", pts: 480},
+            {nombre: "WILLENBERG ANDERSSON", cat: "ADAPTADO (MOTRIZ PARADO)", pos: "2", pts: 380},
+            {nombre: "ZABALA MIJAEL", cat: "ADAPTADO (MOTRIZ PARADO)", pos: "3", pts: 300},
+            {nombre: "MEZA WEIRICH FRANCO", cat: "SUB 9", pos: "1", pts: 480},
+            {nombre: "CAÑETE VALENTINO", cat: "SUB 9", pos: "2", pts: 380},
+            {nombre: "KRUSER IAN", cat: "SUB 9", pos: "3", pts: 300},
+            {nombre: "PEÑA IGNACIO", cat: "SUB 11", pos: "1", pts: 480},
+            {nombre: "BALZA DA ROSA MIA", cat: "SUB 11", pos: "2", pts: 380},
+            {nombre: "DUARTE CARLOS", cat: "SUB 11", pos: "3", pts: 300},
+            {nombre: "MEZA WEIRICH FRANCO", cat: "SUB 11", pos: "4", pts: 300},
+            {nombre: "CAÑETE VALENTINO", cat: "SUB 11", pos: "5", pts: 240},
+            {nombre: "GEREZ SANTINO", cat: "SUB 13", pos: "1", pts: 480},
+            {nombre: "CORADINI EMANUEL", cat: "SUB 13", pos: "2", pts: 380},
+            {nombre: "BICCI VALENTINO", cat: "SUB 13", pos: "3", pts: 300},
+            {nombre: "HOFFERBERG LAUTARO", cat: "SUB 13", pos: "4", pts: 300},
+            {nombre: "APONTE ALEJO", cat: "SUB 13", pos: "5", pts: 240},
+            {nombre: "FERNANDEZ MAITE", cat: "SUB 13", pos: "6", pts: 240},
+            {nombre: "DIETERLE BENJAMIN", cat: "SUB 13", pos: "7", pts: 240},
+            {nombre: "FRIES ELOISA", cat: "SUB 13", pos: "8", pts: 240},
+            {nombre: "PORTILLO ALAN", cat: "SUB 13", pos: "9", pts: 200},
+            {nombre: "DUARTE CARLOS", cat: "SUB 13", pos: "10", pts: 200},
+            {nombre: "TOTH MICAELA", cat: "SUB 13", pos: "11", pts: 200},
+            {nombre: "OETTEL RODRIGO", cat: "SUB 13", pos: "12", pts: 200},
+            {nombre: "GUNDES MILAGROS", cat: "SUB 13", pos: "13", pts: 200},
+            {nombre: "BALZA DA ROSA MIA", cat: "SUB 13", pos: "14", pts: 200},
+            {nombre: "STEKLER FRANCO", cat: "SUB 13", pos: "ZONA", pts: 120},
+            {nombre: "VALASEK GALO", cat: "SUB 13", pos: "ZONA", pts: 120},
+            {nombre: "VALENZUELA SANTIAGO", cat: "SUB 13", pos: "ZONA", pts: 120},
+            {nombre: "KACHUK JUAN IGNACIO", cat: "SUB 13", pos: "ZONA", pts: 120},
+            {nombre: "ORTELLADO TOBIAS", cat: "SUB 13", pos: "ZONA", pts: 120},
+            {nombre: "GORAS IAN", cat: "SUB 13", pos: "ZONA", pts: 120},
+            {nombre: "PEÑA IGNACIO", cat: "SUB 13", pos: "ZONA", pts: 120},
+            {nombre: "ROMERO ANITA", cat: "SUB 15", pos: "1", pts: 480},
+            {nombre: "ISASI RODRIGO", cat: "SUB 15", pos: "2", pts: 380},
+            {nombre: "GNAPE ALEJANDRO", cat: "SUB 15", pos: "3", pts: 300},
+            {nombre: "BANDEIRA BRUNO", cat: "SUB 15", pos: "4", pts: 300},
+            {nombre: "PEREYRA LUZ", cat: "SUB 15", pos: "5", pts: 240},
+            {nombre: "BRAUNSTEIN MAX", cat: "SUB 15", pos: "6", pts: 240},
+            {nombre: "SACHETTE GUSTAVO", cat: "SUB 15", pos: "7", pts: 240},
+            {nombre: "MAKARUK ALEJO", cat: "SUB 15", pos: "8", pts: 240},
+            {nombre: "CAÑETE JOAQUIN", cat: "SUB 15", pos: "9", pts: 200},
+            {nombre: "VALLEJOS CELESTE", cat: "SUB 15", pos: "10", pts: 200},
+            {nombre: "BAEZ MAXIMO", cat: "SUB 15", pos: "ZONA", pts: 120},
+            {nombre: "APONTE ALEJO", cat: "SUB 15", pos: "ZONA", pts: 120},
+            {nombre: "DIETERLE BENJAMIN", cat: "SUB 15", pos: "ZONA", pts: 120},
+            {nombre: "AVALOS MAXIMILIANO", cat: "SUB 15", pos: "ZONA", pts: 120},
+            {nombre: "BALZA DA ROSA JULIETA", cat: "SUB 15", pos: "ZONA", pts: 120},
+            {nombre: "PURTIK MILKA", cat: "SUB 15", pos: "ZONA", pts: 120},
+            {nombre: "LOPEZ AGUSTIN", cat: "SUB 29", pos: "1", pts: 480},
+            {nombre: "ROMERO AGUSTIN", cat: "SUB 29", pos: "2", pts: 380},
+            {nombre: "MONTIEL GABRIEL", cat: "SUB 29", pos: "3", pts: 300},
+            {nombre: "SCHWANKE GEISON", cat: "SUB 29", pos: "4", pts: 300},
+            {nombre: "APONTE BRUNO", cat: "SUB 29", pos: "5", pts: 240},
+            {nombre: "MARTINA IGNACIO", cat: "SUB 29", pos: "6", pts: 240},
+            {nombre: "PIRIS LAUTARO", cat: "SUB 29", pos: "7", pts: 240},
+            {nombre: "DE OLIVEIRA RAINIERY", cat: "SUB 29", pos: "8", pts: 240},
+            {nombre: "MIRANDA JERONIMO", cat: "SUB 29", pos: "ZONA", pts: 120},
+            {nombre: "LAPEJRUSK MAXIMO", cat: "SUB 29", pos: "ZONA", pts: 120},
+            {nombre: "DE ANUNCIACION JUNIOR", cat: "SUB 29", pos: "ZONA", pts: 120},
+            {nombre: "FORSTER RICARDO", cat: "SUB 29", pos: "ZONA", pts: 120},
+            {nombre: "KARLEN MACARENA", cat: "MAXI 30 DAMAS", pos: "1", pts: 480},
+            {nombre: "MEYER HERRMANN GABRIELA", cat: "MAXI 30 DAMAS", pos: "2", pts: 380},
+            {nombre: "COMBA ALEJANDRA", cat: "MAXI 30 DAMAS", pos: "3", pts: 300},
+            {nombre: "AQUINO MARIELA", cat: "MAXI 30 DAMAS", pos: "4", pts: 300},
+            {nombre: "FERNANDEZ EMANUEL", cat: "MAXI 30", pos: "1", pts: 480},
+            {nombre: "OMAR YUNG", cat: "MAXI 30", pos: "2", pts: 380},
+            {nombre: "BOYER MATHIEU", cat: "MAXI 30", pos: "3", pts: 300},
+            {nombre: "DOS SANTOS WILLIAM", cat: "MAXI 30", pos: "4", pts: 300},
+            {nombre: "REA MATIAS", cat: "MAXI 30", pos: "5", pts: 240},
+            {nombre: "KUNRATH MARCOS", cat: "MAXI 30", pos: "6", pts: 240},
+            {nombre: "LOPEZ HORACIO", cat: "MAXI 30", pos: "7", pts: 240},
+            {nombre: "PAZ EFRAIN", cat: "MAXI 30", pos: "8", pts: 240},
+            {nombre: "FLEITAS ALEJANDRO", cat: "MAXI 30", pos: "9", pts: 200},
+            {nombre: "DALLA POSSA RICARDO", cat: "MAXI 30", pos: "10", pts: 200},
+            {nombre: "SOSA EMILIANO", cat: "MAXI 30", pos: "ZONA", pts: 120},
+            {nombre: "MONACCI ARIEL", cat: "MAXI 30", pos: "ZONA", pts: 120},
+            {nombre: "MUSTIFAGA MARCELO", cat: "MAXI 30", pos: "ZONA", pts: 120},
+            {nombre: "AGUIRRE FERNANDO", cat: "MAXI 30", pos: "ZONA", pts: 120},
+            {nombre: "KLEINBIELEN ALICIA", cat: "MAXI 40 DAMAS", pos: "1", pts: 480},
+            {nombre: "SILVA ZULEMA", cat: "MAXI 40 DAMAS", pos: "2", pts: 380},
+            {nombre: "COMBA ALEJANDRA", cat: "MAXI 40 DAMAS", pos: "3", pts: 300},
+            {nombre: "DA ROSA SILVANA", cat: "MAXI 40 DAMAS", pos: "4", pts: 300},
+            {nombre: "OMAR YUNG", cat: "MAXI 40", pos: "1", pts: 480},
+            {nombre: "LOPEZ DIEGO", cat: "MAXI 40", pos: "2", pts: 380},
+            {nombre: "BRAETZ CARLOS", cat: "MAXI 40", pos: "3", pts: 300},
+            {nombre: "BACA FABIAN", cat: "MAXI 40", pos: "4", pts: 300},
+            {nombre: "FLEITAS ALEJANDRO", cat: "MAXI 40", pos: "5", pts: 240},
+            {nombre: "KONIG WALTER", cat: "MAXI 40", pos: "6", pts: 240},
+            {nombre: "DEBELUK MARIO", cat: "MAXI 40", pos: "7", pts: 240},
+            {nombre: "CIEPLINSKI PEDRO", cat: "MAXI 40", pos: "8", pts: 240},
+            {nombre: "LOPEZ GUSTAVO", cat: "MAXI 40", pos: "ZONA", pts: 120},
+            {nombre: "AGUIRRE FERNANDO", cat: "MAXI 40", pos: "ZONA", pts: 120},
+            {nombre: "DOS SANTOS MILTON", cat: "MAXI 40", pos: "ZONA", pts: 120},
+            {nombre: "HIRCH OTTO", cat: "MAXI 40", pos: "ZONA", pts: 120},
+            {nombre: "BACA FABIAN", cat: "MAXI 50 CABALLEROS", pos: "1", pts: 480},
+            {nombre: "NICOLICHIA CELSO", cat: "MAXI 50 CABALLEROS", pos: "2", pts: 380},
+            {nombre: "KONIG WALTER", cat: "MAXI 50 CABALLEROS", pos: "3", pts: 300},
+            {nombre: "BRAETZ CARLOS", cat: "MAXI 50 CABALLEROS", pos: "4", pts: 300},
+            {nombre: "DOS SANTOS MILTON", cat: "MAXI 50 CABALLEROS", pos: "ZONA", pts: 120},
+            {nombre: "DEBELUK MARIO", cat: "MAXI 50 CABALLEROS", pos: "ZONA", pts: 120},
+            {nombre: "GONCALVES CARLOS", cat: "MAXI 50 CABALLEROS", pos: "ZONA 4", pts: 80},
+            {nombre: "CIEPLINSKI PEDRO", cat: "MAXI 50 CABALLEROS", pos: "ZONA 4", pts: 80},
+            {nombre: "FLORES JORGE", cat: "CUARTA", pos: "1", pts: 480},
+            {nombre: "CORADINI EMANUEL", cat: "CUARTA", pos: "2", pts: 380},
+            {nombre: "RIOS RAMIRO", cat: "CUARTA", pos: "3", pts: 300},
+            {nombre: "BAEZ MAXIMO", cat: "CUARTA", pos: "4", pts: 300},
+            {nombre: "LOPEZ GEREMIAS", cat: "CUARTA", pos: "5", pts: 240},
+            {nombre: "ARMELINI LUKA", cat: "CUARTA", pos: "6", pts: 240},
+            {nombre: "SILVA DARIO", cat: "CUARTA", pos: "7", pts: 240},
+            {nombre: "BATISTA ELIO", cat: "CUARTA", pos: "8", pts: 240},
+            {nombre: "CAÑETE JOAQUIN", cat: "CUARTA", pos: "9", pts: 200},
+            {nombre: "FEDUZKA THIAGO", cat: "CUARTA", pos: "10", pts: 200},
+            {nombre: "CARMARINO LUCAS", cat: "CUARTA", pos: "11", pts: 200},
+            {nombre: "BALZA PABLO", cat: "CUARTA", pos: "12", pts: 200},
+            {nombre: "PORTILLO ALAN", cat: "CUARTA", pos: "13", pts: 200},
+            {nombre: "LAPEJRUSK MAXIMO", cat: "CUARTA", pos: "14", pts: 200},
+            {nombre: "COLMAN SIMON", cat: "CUARTA", pos: "15", pts: 200},
+            {nombre: "ORTIZ JOAQUIN", cat: "CUARTA", pos: "16", pts: 200},
+            {nombre: "BATISTA DA CUNHA ELIAN", cat: "CUARTA", pos: "17", pts: 160},
+            {nombre: "GUNDES MILAGROS", cat: "CUARTA", pos: "18", pts: 160},
+            {nombre: "CORREA JULIO", cat: "CUARTA", pos: "19", pts: 160},
+            {nombre: "RODRIGUEZ GONZALO", cat: "CUARTA", pos: "20", pts: 160},
+            {nombre: "VALASEK GALO", cat: "CUARTA", pos: "ZONA", pts: 120},
+            {nombre: "VALENZUELA SANTIAGO", cat: "CUARTA", pos: "ZONA", pts: 120},
+            {nombre: "BATISTA DA CUNHA ALEX", cat: "CUARTA", pos: "ZONA", pts: 120},
+            {nombre: "GNAPE JOSE", cat: "CUARTA", pos: "ZONA", pts: 120},
+            {nombre: "PURTIK MILKA", cat: "CUARTA", pos: "ZONA", pts: 120},
+            {nombre: "GORAS IAN", cat: "CUARTA", pos: "ZONA", pts: 120},
+            {nombre: "STEKLER FRANCO", cat: "CUARTA", pos: "ZONA", pts: 120},
+            {nombre: "FERNANDEZ MAITE", cat: "CUARTA", pos: "ZONA", pts: 120},
+            {nombre: "SILVA ZULEMA", cat: "CUARTA", pos: "ZONA", pts: 120},
+            {nombre: "MOROZ DULCE", cat: "CUARTA", pos: "ZONA", pts: 120},
+            {nombre: "MONACCI ARIEL", cat: "TERCERA", pos: "1", pts: 480},
+            {nombre: "BANDEIRA BRUNO", cat: "TERCERA", pos: "2", pts: 380},
+            {nombre: "DEBELUK MARIO", cat: "TERCERA", pos: "3", pts: 300},
+            {nombre: "RABE AGUSTIN", cat: "TERCERA", pos: "4", pts: 300},
+            {nombre: "FORSTER RICARDO", cat: "TERCERA", pos: "5", pts: 240},
+            {nombre: "PRYSTUPA LUCIANO", cat: "TERCERA", pos: "6", pts: 240},
+            {nombre: "GRAISARO GUSTAVO CARLOS", cat: "TERCERA", pos: "7", pts: 240},
+            {nombre: "ISASI RODRIGO", cat: "TERCERA", pos: "8", pts: 240},
+            {nombre: "MAKARUK ALEJO", cat: "TERCERA", pos: "9", pts: 200},
+            {nombre: "KARLEN MACARENA", cat: "TERCERA", pos: "10", pts: 200},
+            {nombre: "GEREZ SANTINO", cat: "TERCERA", pos: "11", pts: 200},
+            {nombre: "PEÑA JAVIER", cat: "TERCERA", pos: "12", pts: 200},
+            {nombre: "HOFFERBERG LAUTARO", cat: "TERCERA", pos: "13", pts: 200},
+            {nombre: "MEYER HERRMANN GABRIELA", cat: "TERCERA", pos: "14", pts: 200},
+            {nombre: "BRAUNSTEIN MAX", cat: "TERCERA", pos: "15", pts: 200},
+            {nombre: "GNAPE ALEJANDRO", cat: "TERCERA", pos: "16", pts: 200},
+            {nombre: "RENDON OSCAR", cat: "TERCERA", pos: "17", pts: 160},
+            {nombre: "LOPEZ GEREMIAS", cat: "TERCERA", pos: "18", pts: 160},
+            {nombre: "MERCADO LEANDRO", cat: "TERCERA", pos: "ZONA", pts: 120},
+            {nombre: "GNAPE JOSE", cat: "TERCERA", pos: "ZONA", pts: 120},
+            {nombre: "DE ANUNCIACION JUNIOR", cat: "TERCERA", pos: "ZONA", pts: 120},
+            {nombre: "LOPEZ GUSTAVO", cat: "TERCERA", pos: "ZONA", pts: 120},
+            {nombre: "ARRIETA MAURICIO", cat: "TERCERA", pos: "ZONA", pts: 120},
+            {nombre: "RABE RAMIRO", cat: "TERCERA", pos: "ZONA", pts: 120},
+            {nombre: "GRAISARO GERONIMO TOMAS", cat: "TERCERA", pos: "ZONA", pts: 120},
+            {nombre: "CARMARINO LUCAS", cat: "TERCERA", pos: "ZONA", pts: 120},
+            {nombre: "AVALOS MAXIMILIANO", cat: "TERCERA", pos: "ZONA", pts: 120},
+            {nombre: "RIOS RAMIRO", cat: "TERCERA", pos: "ZONA 4", pts: 80},
+            {nombre: "KLEINBIELEN ALICIA", cat: "TERCERA", pos: "ZONA 4", pts: 80},
+            {nombre: "FRIES ELOISA", cat: "DAMAS SEGUNDA", pos: "1", pts: 480},
+            {nombre: "BALZA JULIETA", cat: "DAMAS SEGUNDA", pos: "2", pts: 380},
+            {nombre: "MEYER HERRMANN GABRIELA", cat: "DAMAS SEGUNDA", pos: "3", pts: 300},
+            {nombre: "KLEINBIELEN ALICIA", cat: "DAMAS SEGUNDA", pos: "4", pts: 300},
+            {nombre: "DA ROSA SILVANA", cat: "DAMAS SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "SILVA ZULEMA", cat: "DAMAS SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "NICOLICHIA CELSO", cat: "SEGUNDA", pos: "1", pts: 480},
+            {nombre: "LOPEZ DIEGO", cat: "SEGUNDA", pos: "2", pts: 380},
+            {nombre: "LOPEZ HORACIO", cat: "SEGUNDA", pos: "3", pts: 300},
+            {nombre: "DOS SANTOS WILLIAM", cat: "SEGUNDA", pos: "4", pts: 300},
+            {nombre: "DOS SANTOS MILTON", cat: "SEGUNDA", pos: "5", pts: 240},
+            {nombre: "KONIG WALTER", cat: "SEGUNDA", pos: "6", pts: 240},
+            {nombre: "ROMERO ANITA", cat: "SEGUNDA", pos: "7", pts: 240},
+            {nombre: "APONTE BRUNO", cat: "SEGUNDA", pos: "8", pts: 240},
+            {nombre: "PIRIS LAUTARO", cat: "SEGUNDA", pos: "9", pts: 200},
+            {nombre: "SACHETTE GUSTAVO", cat: "SEGUNDA", pos: "10", pts: 200},
+            {nombre: "DALLA POSSA RICARDO", cat: "SEGUNDA", pos: "11", pts: 200},
+            {nombre: "BENITEZ TOME MARTINA", cat: "SEGUNDA", pos: "12", pts: 200},
+            {nombre: "BRAETZ CARLOS", cat: "SEGUNDA", pos: "13", pts: 200},
+            {nombre: "GONCALVES CARLOS", cat: "SEGUNDA", pos: "14", pts: 200},
+            {nombre: "MONACCI ARIEL", cat: "SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "GRAISARO GERONIMO", cat: "SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "SOSA EMILIANO", cat: "SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "MERCADO LEANDRO", cat: "SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "KUNRATH MARCOS", cat: "SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "MUÑOZ MARCOS", cat: "SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "DEBELUK MARIO", cat: "SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "CIEPLINSKI PEDRO", cat: "SEGUNDA", pos: "ZONA 4", pts: 80},
+            {nombre: "MUSTIFAGA MARCELO", cat: "SEGUNDA", pos: "ZONA 4", pts: 80},
+            {nombre: "KARLEN MACARENA", cat: "TC DAMAS (PRIMERA)", pos: "1", pts: 480},
+            {nombre: "BENITEZ TOME MARTINA", cat: "TC DAMAS (PRIMERA)", pos: "2", pts: 380},
+            {nombre: "KLEINBIELEN ALICIA", cat: "TC DAMAS (PRIMERA)", pos: "3", pts: 300},
+            {nombre: "VALLEJOS CELESTE", cat: "TC DAMAS (PRIMERA)", pos: "4", pts: 300},
+            {nombre: "MEYER HERRMANN GABRIELA", cat: "TC DAMAS (PRIMERA)", pos: "5", pts: 240},
+            {nombre: "FERREIRA NAHIR", cat: "TC DAMAS (PRIMERA)", pos: "6", pts: 240},
+            {nombre: "TOTH MICAELA", cat: "TC DAMAS (PRIMERA)", pos: "ZONA", pts: 120},
+            {nombre: "FONTANA MARIANA", cat: "TC DAMAS (PRIMERA)", pos: "ZONA", pts: 120},
+            {nombre: "SILVA ZULEMA", cat: "TC DAMAS (PRIMERA)", pos: "ZONA", pts: 120},
+            {nombre: "BOYER MATHIEU", cat: "TC PRIMERA", pos: "1", pts: 480},
+            {nombre: "FERNANDEZ EMANUEL", cat: "TC PRIMERA", pos: "2", pts: 380},
+            {nombre: "SCHWANKE GEISON", cat: "TC PRIMERA", pos: "3", pts: 300},
+            {nombre: "OMAR YUNG", cat: "TC PRIMERA", pos: "4", pts: 300},
+            {nombre: "IRRAZABAL MARIANO", cat: "TC PRIMERA", pos: "5", pts: 240},
+            {nombre: "MARTINA IGNACIO", cat: "TC PRIMERA", pos: "6", pts: 240},
+            {nombre: "GALEANO ALBERTO", cat: "TC PRIMERA", pos: "7", pts: 240},
+            {nombre: "LOPEZ AGUSTIN", cat: "TC PRIMERA", pos: "8", pts: 240},
+            {nombre: "ROMERO AGUSTIN", cat: "TC PRIMERA", pos: "9", pts: 200},
+            {nombre: "MIRANDA JERONIMO", cat: "TC PRIMERA", pos: "10", pts: 200},
+            {nombre: "BACA FABIAN", cat: "TC PRIMERA", pos: "11", pts: 200},
+            {nombre: "GONCALVES CARLOS", cat: "TC PRIMERA", pos: "12", pts: 200},
+            {nombre: "MONTIEL GABRIEL", cat: "TC PRIMERA", pos: "13", pts: 200},
+            {nombre: "DOS SANTOS WILLIAM", cat: "TC PRIMERA", pos: "14", pts: 160},
+            {nombre: "REA MATIAS", cat: "TC PRIMERA", pos: "15", pts: 160},
+            {nombre: "PAZ EFRAIN", cat: "TC PRIMERA", pos: "16", pts: 160},
+            {nombre: "ROLON ESTEBAN", cat: "TC PRIMERA", pos: "17", pts: 160},
+            {nombre: "BAREIRO OSVALDO", cat: "TC PRIMERA", pos: "18", pts: 160},
+            {nombre: "MUSTIFAGA MARCELO", cat: "TC PRIMERA", pos: "19", pts: 160},
+            {nombre: "FLEITAS ALEJANDRO", cat: "TC PRIMERA", pos: "20", pts: 160},
+            {nombre: "KONIG WALTER", cat: "TC PRIMERA", pos: "21", pts: 160},
+            {nombre: "SOSA EMILIANO", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "LOPEZ HORACIO", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "DE LA ROSA GUSTAVO", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "MUÑOZ MARCOS", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "STACH ENZO", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "VALLEJOS JAVIER", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "BERNHARDT LEANDRO", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "KUNRATH MARCOS", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "DALLA POSSA RICARDO", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "ARRIOLA ALEXIS", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "DE OLIVEIRA RANIERY", cat: "TC PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "EPELBAUM JORGE", cat: "TC PRIMERA", pos: "ZONA 4", pts: 80},
+            {nombre: "RABE A / RABE R", cat: "DOBLES SEGUNDA", pos: "1", pts: 480},
+            {nombre: "BICCI R / BAEZ A", cat: "DOBLES SEGUNDA", pos: "2", pts: 380},
+            {nombre: "SACHETTE G / SACHETTE I", cat: "DOBLES SEGUNDA", pos: "3", pts: 300},
+            {nombre: "MUSTIFAGA / DALLA POSSA", cat: "DOBLES SEGUNDA", pos: "4", pts: 300},
+            {nombre: "PEÑA J / PEÑA I", cat: "DOBLES SEGUNDA", pos: "5", pts: 240},
+            {nombre: "RENDON / ARRIETA", cat: "DOBLES SEGUNDA", pos: "6", pts: 240},
+            {nombre: "MERCADO L / GRAISARO GT", cat: "DOBLES SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "BALZA J / BALZA M", cat: "DOBLES SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "BALZA P / DA ROSA S", cat: "DOBLES SEGUNDA", pos: "ZONA", pts: 120},
+            {nombre: "LOPEZ / MARTINA", cat: "DOBLES PRIMERA", pos: "1", pts: 480},
+            {nombre: "IRRAZABAL / BAREIRO", cat: "DOBLES PRIMERA", pos: "2", pts: 380},
+            {nombre: "GALEANO / FERNANDEZ", cat: "DOBLES PRIMERA", pos: "3", pts: 300},
+            {nombre: "BOYER / FLEITAS", cat: "DOBLES PRIMERA", pos: "4", pts: 300},
+            {nombre: "SCHWANKE / DE OLIVEIRA", cat: "DOBLES PRIMERA", pos: "5", pts: 240},
+            {nombre: "REA / KARLEM", cat: "DOBLES PRIMERA", pos: "6", pts: 240},
+            {nombre: "MONTIEL / MIRANDA", cat: "DOBLES PRIMERA", pos: "7", pts: 240},
+            {nombre: "ROLON / ARRIOLA", cat: "DOBLES PRIMERA", pos: "8", pts: 240},
+            {nombre: "DOS SANTOS / KUNRATH", cat: "DOBLES PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "SOSA / PAZ", cat: "DOBLES PRIMERA", pos: "ZONA", pts: 120},
+            {nombre: "GONCALVES / LOPEZ", cat: "DOBLES PRIMERA", pos: "ZONA", pts: 120}
+        ];
+
+        function ejecutarBusqueda() {
+            const consulta = normalizarCadenaTexto(document.getElementById('searchInput').value);
+            const contenedor = document.getElementById('resultContainer');
+            contenedor.innerHTML = ""; 
+
+            if (consulta === "") {
+                contenedor.innerHTML = `<div class="status-message">Por favor ingrese un apellido.</div>`;
+                return;
+            }
+
+            const resultados = baseDatosRanking.filter(j => {
+                const nombreSanitizado = normalizarCadenaTexto(j.nombre);
+                return nombreSanitizado.includes(consulta);
+            });
+
+            if (resultados.length === 0) {
+                contenedor.innerHTML = `<div class="status-message">No hay registros para la búsqueda realizada.</div>`;
+                return;
+            }
+
+            renderizarTarjetas(resultados);
+            document.getElementById('panelBuscador').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function filtrarPorCategoria(categoria) {
+            const resultados = baseDatosRanking.filter(j => j.cat === categoria);
+            renderizarTarjetas(resultados);
+            document.getElementById('searchInput').value = ""; 
+            
+            setTimeout(() => {
+                const panel = document.getElementById('panelBuscador');
+                if(panel) {
+                    window.scrollTo({
+                        top: panel.offsetTop - 10,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 50);
+        }
+
+function renderizarTarjetas(lista) {
+    const contenedor = document.getElementById('resultContainer');
+    contenedor.innerHTML = ""; 
+
+    lista.forEach(jugador => {
+        const tarjeta = document.createElement('div');
+        const esDobles = jugador.cat.includes("DOBLES") || jugador.nombre.includes("/");
+        
+        tarjeta.className = esDobles ? 'data-card dobles-card' : 'data-card individual-card';
+        
+        let extraHtml = esDobles ? `<div class="team-info">Dupla de Dobles</div>` : "";
+        
+        // CORRECCIÓN AQUÍ: Mantiene el string completo de la zona (ej. "ZONA 4") si no es un número directo
+        const posVisual = String(jugador.pos).includes("ZONA") ? jugador.pos : `#${jugador.pos}`;
+
+        tarjeta.innerHTML = `
+            <h3>${jugador.nombre}</h3>
+            <div class="data-grid">
+                <div class="data-cell">
+                    <span class="cell-title">Categoría</span>
+                    <span class="cell-value">${jugador.cat}</span>
+                </div>
+                <div class="data-cell">
+                    <span class="cell-title">Puesto</span>
+                    <span class="cell-value posicion-fija">${posVisual}</span>
+                </div>
+                <div class="data-cell">
+                    <span class="cell-title">Puntos</span>
+                    <span class="cell-value">${jugador.pts}</span>
+                </div>
+                ${extraHtml}
+            </div>
+        `;
+        contenedor.appendChild(tarjeta);
+    });
+}
+
+    </script>
+</body>
+</html>
