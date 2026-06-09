@@ -101,7 +101,7 @@
 
         /* --- CONTENIDO --- */
         main {
-            max-width: 800px; /* Ajuste para que en PC no se vea tan vacío */
+            max-width: 800px; 
             margin: 1rem auto;
             padding: 0 1rem;
         }
@@ -158,9 +158,10 @@
 
         /* --- BUSCADOR Y FILTROS --- */
         .search-block { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .search-wrapper { position: relative; flex: 1; display: flex; align-items: center; }
         .search-field {
-            flex: 1;
-            padding: 0.7rem 1rem;
+            width: 100%;
+            padding: 0.7rem 2.5rem 0.7rem 1rem;
             border: 1px solid var(--borde-neon);
             border-radius: 4px;
             background: #000000;
@@ -169,9 +170,49 @@
             outline: none;
         }
         .search-field:focus { border-color: var(--neon-azul); box-shadow: 0 0 8px rgba(0, 240, 255, 0.3); }
+        
+        .btn-clear {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--texto-gris);
+            cursor: pointer;
+            display: none;
+            font-size: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-clear:hover { color: var(--texto-blanco); }
+
         .btn-search {
             background-color: var(--neon-azul); color: #000000; border: none; padding: 0 1.2rem;
             border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* --- TABLA TOP 5 --- */
+        .top5-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            background: #161616;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--neon-naranja);
+        }
+        .top5-table th {
+            background: #222;
+            color: var(--neon-naranja);
+            padding: 0.6rem;
+            font-size: 0.8rem;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .top5-table td {
+            padding: 0.6rem;
+            border-bottom: 1px solid #2b2b2b;
+            font-size: 0.85rem;
         }
 
         /* --- TARJETAS DE RANKING VARIADAS Y UNIFICADAS --- */
@@ -197,7 +238,7 @@
             border: 1px solid #252525; 
         }
         .cell-title { font-size: 0.65rem; color: var(--texto-gris); display: block; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.5px; }
-        .cell-value { font-size: 0.95rem; font-weight: bold; color: #ffffff; }
+        .cell-value { font-size: 0.85rem; font-weight: bold; color: #ffffff; }
         .cell-value.posicion-fija { color: var(--neon-verde); text-shadow: 0 0 5px rgba(57, 255, 20, 0.3); }
         
         .team-info {
@@ -216,6 +257,15 @@
             cursor: pointer; text-align: center; transition: 0.2s;
         }
         .btn-matrix:hover { border-color: var(--neon-azul); color: var(--neon-azul); background: #1a1a1a; }
+        
+        /* Estado activo iluminado de botones de categoría */
+        .btn-matrix.active-cat {
+            border-color: var(--neon-verde);
+            color: var(--neon-verde);
+            background: #1a2e1a;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+        }
+
         .matrix-section { grid-column: span 2; font-size: 0.7rem; color: var(--neon-azul); margin: 0.6rem 0 0.2rem 0; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
 
         /* --- BOTONES DE DESCARGA --- */
@@ -226,6 +276,28 @@
             display: flex; align-items: center; justify-content: center; gap: 0.6rem; transition: 0.2s;
         }
         .btn-descarga:hover { border-color: var(--neon-verde); color: var(--neon-verde); }
+
+        /* --- FOOTER DE CONTACTO --- */
+        footer {
+            background: #050505;
+            border-top: 1px solid var(--borde-neon);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .footer-text { font-size: 0.85rem; color: var(--texto-gris); margin-bottom: 0.8rem; }
+        .footer-socials { display: flex; justify-content: center; gap: 1.5rem; }
+        .footer-link {
+            color: var(--neon-azul);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-weight: 500;
+            transition: 0.2s ease;
+        }
+        .footer-link:hover { text-shadow: 0 0 8px rgba(0, 240, 255, 0.6); color: #ffffff; }
     </style>
 </head>
 <body>
@@ -237,11 +309,12 @@
 
     <main>
         <div id="inicio" class="tab-content active">
-            <div class="panel">
-                <h2><span class="material-symbols-outlined">info</span>Estado de Tablas</h2>
-                <div class="noticia-item">
-                    <span class="noticia-fecha">ÚLTIMA ACTUALIZACIÓN: 24/05/2026</span>
-                    <p class="panel-text">Los rankings reflejan los puntos oficiales computados hasta el último torneo disputado.</p>
+            <div class="panel" style="border: 1px solid var(--neon-naranja); box-shadow: 0 0 15px rgba(255, 170, 0, 0.3);">
+                <h2 style="color: var(--neon-naranja);"><span class="material-symbols-outlined">event_upcoming</span>PRÓXIMO TORNEO</h2>
+                <div class="noticia-item" style="border-left: 3px solid var(--neon-naranja);">
+                    <span class="noticia-fecha" style="color: var(--neon-naranja);">18 Y 19 DE JULIO DE 2026</span>
+                    <p class="panel-text" style="font-weight: bold; color: #ffffff; margin-top: 0.2rem;">Centro Cultural Paraguayo de Puerto Rico</p>
+                    <p class="panel-text" style="font-size: 0.8rem; margin-top: 0.1rem;">Circuito Oficial Misionero "Tierra Colorada". Inscripciones abiertas próximamente.</p>
                 </div>
             </div>
 
@@ -259,7 +332,10 @@
             <div class="panel" id="panelBuscador">
                 <h2>Buscar Jugador o Dupla</h2>
                 <div class="search-block">
-                    <input type="text" id="searchInput" class="search-field" placeholder="Escriba el apellido..." onkeydown="if(event.key === 'Enter') ejecutarBusqueda()">
+                    <div class="search-wrapper">
+                        <input type="text" id="searchInput" class="search-field" placeholder="Escriba el apellido..." oninput="controlarBotonLimpiar()" onkeydown="if(event.key === 'Enter') ejecutarBusqueda()">
+                        <button id="btnClear" class="btn-clear" onclick="limpiarBuscador()">✕</button>
+                    </div>
                     <button class="btn-search" onclick="ejecutarBusqueda()">
                         <span class="material-symbols-outlined">search</span>
                     </button>
@@ -273,36 +349,36 @@
                 <h2>Categorías</h2>
                 <div class="matrix-grid">
                     <div class="matrix-section">Caballeros</div>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('TC PRIMERA')">TC Primera</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('SEGUNDA')">Segunda</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('TERCERA')">Tercera</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('CUARTA')">Cuarta</button>
+                    <button class="btn-matrix" data-cat="TC PRIMERA" onclick="filtrarPorCategoria('TC PRIMERA', this)">TC Primera</button>
+                    <button class="btn-matrix" data-cat="SEGUNDA" onclick="filtrarPorCategoria('SEGUNDA', this)">Segunda</button>
+                    <button class="btn-matrix" data-cat="TERCERA" onclick="filtrarPorCategoria('TERCERA', this)">Tercera</button>
+                    <button class="btn-matrix" data-cat="CUARTA" onclick="filtrarPorCategoria('CUARTA', this)">Cuarta</button>
                     
                     <div class="matrix-section">Damas</div>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('TC DAMAS (PRIMERA)')">TC Damas (Primera)</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('DAMAS SEGUNDA')">Damas Segunda</button>
+                    <button class="btn-matrix" data-cat="TC DAMAS (PRIMERA)" onclick="filtrarPorCategoria('TC DAMAS (PRIMERA)', this)">TC Damas (Primera)</button>
+                    <button class="btn-matrix" data-cat="DAMAS SEGUNDA" onclick="filtrarPorCategoria('DAMAS SEGUNDA', this)">Damas Segunda</button>
                     
                     <div class="matrix-section">Dobles</div>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('DOBLES PRIMERA')">Dobles Primera</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('DOBLES SEGUNDA')">Dobles Segunda</button>
+                    <button class="btn-matrix" data-cat="DOBLES PRIMERA" onclick="filtrarPorCategoria('DOBLES PRIMERA', this)">Dobles Primera</button>
+                    <button class="btn-matrix" data-cat="DOBLES SEGUNDA" onclick="filtrarPorCategoria('DOBLES SEGUNDA', this)">Dobles Segunda</button>
                     
                     <div class="matrix-section">Formativas</div>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('SUB 9')">Sub 9</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('SUB 11')">Sub 11</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('SUB 13')">Sub 13</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('SUB 15')">Sub 15</button>
-                    <button class="btn-matrix" style="grid-column: span 2;" onclick="filtrarPorCategoria('SUB 29')">Sub 29</button>
+                    <button class="btn-matrix" data-cat="SUB 9" onclick="filtrarPorCategoria('SUB 9', this)">Sub 9</button>
+                    <button class="btn-matrix" data-cat="SUB 11" onclick="filtrarPorCategoria('SUB 11', this)">Sub 11</button>
+                    <button class="btn-matrix" data-cat="SUB 13" onclick="filtrarPorCategoria('SUB 13', this)">Sub 13</button>
+                    <button class="btn-matrix" data-cat="SUB 15" onclick="filtrarPorCategoria('SUB 15', this)">Sub 15</button>
+                    <button class="btn-matrix" style="grid-column: span 2;" data-cat="SUB 29" onclick="filtrarPorCategoria('SUB 29', this)">Sub 29</button>
                     
                     <div class="matrix-section">Senior / Maxi</div>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('MAXI 30')">Maxi 30</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('MAXI 30 DAMAS')">Maxi 30 Damas</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('MAXI 40')">Maxi 40</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('MAXI 40 DAMAS')">Maxi 40 Damas</button>
-                    <button class="btn-matrix" style="grid-column: span 2;" onclick="filtrarPorCategoria('MAXI 50 CABALLEROS')">Maxi 50 Caballeros</button>
+                    <button class="btn-matrix" data-cat="MAXI 30" onclick="filtrarPorCategoria('MAXI 30', this)">Maxi 30</button>
+                    <button class="btn-matrix" data-cat="MAXI 30 DAMAS" onclick="filtrarPorCategoria('MAXI 30 DAMAS', this)">Maxi 30 Damas</button>
+                    <button class="btn-matrix" data-cat="MAXI 40" onclick="filtrarPorCategoria('MAXI 40', this)">Maxi 40</button>
+                    <button class="btn-matrix" data-cat="MAXI 40 DAMAS" onclick="filtrarPorCategoria('MAXI 40 DAMAS', this)">Maxi 40 Damas</button>
+                    <button class="btn-matrix" style="grid-column: span 2;" data-cat="MAXI 50 CABALLEROS" onclick="filtrarPorCategoria('MAXI 50 CABALLEROS', this)">Maxi 50 Caballeros</button>
 
                     <div class="matrix-section">Adaptado</div>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('ADAPTADOS (INTELECTUAL)')">Adaptados (Intelectual)</button>
-                    <button class="btn-matrix" onclick="filtrarPorCategoria('ADAPTADO (MOTRIZ PARADO)')">Adaptado (Motriz Parado)</button>
+                    <button class="btn-matrix" data-cat="ADAPTADOS (INTELECTUAL)" onclick="filtrarPorCategoria('ADAPTADOS (INTELECTUAL)', this)">Adaptados (Intelectual)</button>
+                    <button class="btn-matrix" data-cat="ADAPTADO (MOTRIZ PARADO)" onclick="filtrarPorCategoria('ADAPTADO (MOTRIZ PARADO)', this)">Adaptado (Motriz Parado)</button>
                 </div>
             </div>
 
@@ -355,8 +431,64 @@
                     </tr>
                 </table>
             </div>
+
+            <div class="panel">
+                <h2><span class="material-symbols-outlined">history_edu</span>Historial de Torneos Anteriores</h2>
+                <p class="panel-text" style="margin-bottom: 0.8rem;">Resultados y repuestas oficiales de las fechas completadas:</p>
+                <div class="noticia-item" style="border-left: 3px solid var(--neon-violeta); margin-bottom: 0.6rem;">
+                    <span class="noticia-fecha" style="color: var(--neon-violeta);">1º FECHA — OBERÁ</span>
+                    <p class="panel-text" style="font-size: 0.85rem; color: #ffffff;">Campeón TC Primera: <strong>Mathieu Boyer</strong></p>
+                    <p class="panel-text" style="font-size: 0.8rem;">Destacada convocatoria regional en el polideportivo municipal.</p>
+                </div>
+                <div class="noticia-item" style="border-left: 3px solid var(--neon-violeta);">
+                    <span class="noticia-fecha" style="color: var(--neon-violeta);">2º FECHA — MONTECARLO</span>
+                    <p class="panel-text" style="font-size: 0.85rem; color: #ffffff;">Campeón TC Primera: <strong>Mathieu Boyer</strong> | Campeona Damas: <strong>Macarena Karlen</strong></p>
+                    <p class="panel-text" style="font-size: 0.8rem;">Resultados consolidados en la cuna histórica del tenis de mesa misionero.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="clubes" class="tab-content">
+            <div class="panel">
+                <h2><span class="material-symbols-outlined">corporate_fare</span>Instituciones Asociadas</h2>
+                <p class="panel-text" style="margin-bottom: 1rem;">Clubes y escuelas de la Provincia de Misiones adheridos a la federación:</p>
+                <div class="podio-lista">
+                    <div class="podio-item" style="flex-direction: column; align-items: flex-start; gap: 0.2rem; padding: 0.8rem;">
+                        <span class="td-label" style="color: var(--neon-azul); font-weight: bold;">Escuela Municipal de Oberá</span>
+                        <span class="panel-text" style="font-size: 0.8rem;">Ubicación: Oberá, Misiones. Foco fuerte en formativas básicas y avanzadas.</span>
+                    </div>
+                    <div class="podio-item" style="flex-direction: column; align-items: flex-start; gap: 0.2rem; padding: 0.8rem;">
+                        <span class="td-label" style="color: var(--neon-verde); font-weight: bold;">Escuela Municipal de Montecarlo</span>
+                        <span class="panel-text" style="font-size: 0.8rem;">Ubicación: Montecarlo, Misiones. Cuna histórica de atletas federados de alto nivel.</span>
+                    </div>
+                    <div class="podio-item" style="flex-direction: column; align-items: flex-start; gap: 0.2rem; padding: 0.8rem;">
+                        <span class="td-label" style="color: var(--neon-naranja); font-weight: bold;">Centro Cultural Paraguayo de Puerto Rico</span>
+                        <span class="panel-text" style="font-size: 0.8rem;">Ubicación: Puerto Rico, Misiones. Próxima sede oficial y epicentro del circuito medio.</span>
+                    </div>
+                    <div class="podio-item" style="flex-direction: column; align-items: flex-start; gap: 0.2rem; padding: 0.8rem;">
+                        <span class="td-label" style="color: var(--neon-violeta); font-weight: bold;">ASDAI - ATMP Posadas</span>
+                        <span class="panel-text" style="font-size: 0.8rem;">Ubicación: Posadas, Misiones. Desarrollo integral de tenis de mesa convencional y adaptado.</span>
+                    </div>
+                    <div class="podio-item" style="flex-direction: column; align-items: flex-start; gap: 0.2rem; padding: 0.8rem;">
+                        <span class="td-label" style="color: #ffffff; font-weight: bold;">Club Unión Dorada de Eldorado</span>
+                        <span class="panel-text" style="font-size: 0.8rem;">Ubicación: Eldorado, Misiones. Referente deportivo del Alto Paraná.</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
+
+    <footer>
+        <p class="footer-text">© 2026 FEMITEM - Federación Misionera de Tenis de Mesa</p>
+        <div class="footer-socials">
+            <a href="https://wa.me/5493743000000" target="_blank" class="footer-link">
+                <span class="material-symbols-outlined">chat</span> WhatsApp
+            </a>
+            <a href="https://instagram.com/femitemoficial/" target="_blank" class="footer-link">
+                <span class="material-symbols-outlined">photo_camera</span> Instagram
+            </a>
+        </div>
+    </footer>
 
     <nav>
         <div class="nav-container">
@@ -369,10 +501,15 @@
             <button class="nav-btn" onclick="cambiarPestana('calendario', this)">
                 <span class="material-symbols-outlined">calendar_month</span>Fechas
             </button>
+            <button class="nav-btn" onclick="cambiarPestana('clubes', this)">
+                <span class="material-symbols-outlined">corporate_fare</span>Mi Club
+            </button>
         </div>
     </nav>
 
     <script>
+        let categoriaSeleccionada = null;
+
         function cambiarPestana(tabId, botonActivo) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -649,34 +786,40 @@
             {nombre: "GONCALVES / LOPEZ", cat: "DOBLES PRIMERA", pos: "ZONA", pts: 120}
         ];
 
+        function controlarBotonLimpiar() {
+            const input = document.getElementById('searchInput');
+            const btn = document.getElementById('btnClear');
+            if (input.value.trim() !== "") {
+                btn.style.display = "flex";
+            } else {
+                btn.style.display = "none";
+            }
+        }
+
+        function limpiarBuscador() {
+            document.getElementById('searchInput').value = "";
+            document.getElementById('btnClear').style.display = "none";
+            aplicarFiltroCombinado();
+        }
+
         function ejecutarBusqueda() {
-            const consulta = normalizarCadenaTexto(document.getElementById('searchInput').value);
-            const contenedor = document.getElementById('resultContainer');
-            contenedor.innerHTML = ""; 
-
-            if (consulta === "") {
-                contenedor.innerHTML = `<div class="status-message">Por favor ingrese un apellido.</div>`;
-                return;
-            }
-
-            const resultados = baseDatosRanking.filter(j => {
-                const nombreSanitizado = normalizarCadenaTexto(j.nombre);
-                return nombreSanitizado.includes(consulta);
-            });
-
-            if (resultados.length === 0) {
-                contenedor.innerHTML = `<div class="status-message">No hay registros para la búsqueda realizada.</div>`;
-                return;
-            }
-
-            renderizarTarjetas(resultados);
+            aplicarFiltroCombinado();
             document.getElementById('panelBuscador').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function filtrarPorCategoria(categoria) {
-            const resultados = baseDatosRanking.filter(j => j.cat === categoria);
-            renderizarTarjetas(resultados);
-            document.getElementById('searchInput').value = ""; 
+        function filtrarPorCategoria(categoria, elementoBoton) {
+            const yaActivo = elementoBoton.classList.contains('active-cat');
+            
+            document.querySelectorAll('.btn-matrix').forEach(btn => btn.classList.remove('active-cat'));
+            
+            if (yaActivo) {
+                categoriaSeleccionada = null;
+            } else {
+                categoriaSeleccionada = categoria;
+                elementoBoton.classList.add('active-cat');
+            }
+            
+            aplicarFiltroCombinado();
             
             setTimeout(() => {
                 const panel = document.getElementById('panelBuscador');
@@ -689,43 +832,118 @@
             }, 50);
         }
 
-function renderizarTarjetas(lista) {
-    const contenedor = document.getElementById('resultContainer');
-    contenedor.innerHTML = ""; 
+        function aplicarFiltroCombinado() {
+            const consulta = normalizarCadenaTexto(document.getElementById('searchInput').value);
+            const contenedor = document.getElementById('resultContainer');
+            contenedor.innerHTML = "";
 
-    lista.forEach(jugador => {
-        const tarjeta = document.createElement('div');
-        const esDobles = jugador.cat.includes("DOBLES") || jugador.nombre.includes("/");
-        
-        tarjeta.className = esDobles ? 'data-card dobles-card' : 'data-card individual-card';
-        
-        let extraHtml = esDobles ? `<div class="team-info">Dupla de Dobles</div>` : "";
-        
-        // CORRECCIÓN AQUÍ: Mantiene el string completo de la zona (ej. "ZONA 4") si no es un número directo
-        const posVisual = String(jugador.pos).includes("ZONA") ? jugador.pos : `#${jugador.pos}`;
+            let resultados = baseDatosRanking;
 
-        tarjeta.innerHTML = `
-            <h3>${jugador.nombre}</h3>
-            <div class="data-grid">
-                <div class="data-cell">
-                    <span class="cell-title">Categoría</span>
-                    <span class="cell-value">${jugador.cat}</span>
-                </div>
-                <div class="data-cell">
-                    <span class="cell-title">Puesto</span>
-                    <span class="cell-value posicion-fija">${posVisual}</span>
-                </div>
-                <div class="data-cell">
-                    <span class="cell-title">Puntos</span>
-                    <span class="cell-value">${jugador.pts}</span>
-                </div>
-                ${extraHtml}
-            </div>
-        `;
-        contenedor.appendChild(tarjeta);
-    });
-}
+            // Lógica combinada: filtrar por categoría activa si existe
+            if (categoriaSeleccionada) {
+                resultados = resultados.filter(j => j.cat === categoriaSeleccionada);
+            }
 
+            // Filtrar además por apellido si hay una búsqueda escrita
+            if (consulta !== "") {
+                resultados = resultados.filter(j => {
+                    const nombreSanitizado = normalizarCadenaTexto(j.nombre);
+                    return nombreSanitizado.includes(consulta);
+                });
+            }
+
+            if (consulta === "" && !categoriaSeleccionada) {
+                contenedor.innerHTML = `<div class="status-message">Seleccione una categoría abajo o busque por apellido para ver las posiciones.</div>`;
+                return;
+            }
+
+            if (resultados.length === 0) {
+                contenedor.innerHTML = `<div class="status-message">No hay registros para los filtros seleccionados.</div>`;
+                return;
+            }
+
+            // Si hay una categoría seleccionada y no se está buscando un apellido específico, renderizamos la Tabla Top 5 comparativa
+            if (categoriaSeleccionada && consulta === "") {
+                renderizarTablaTop5(categoriaSeleccionada, contenedor);
+            }
+
+            renderizarTarjetas(resultados, contenedor);
+        }
+
+        function renderizarTablaTop5(categoria, contenedor) {
+            // Filtrar jugadores de la categoría y extraer los primeros 5 (ordenados en BD por ranking)
+            const deCategoria = baseDatosRanking.filter(j => j.cat === categoria);
+            const top5 = deCategoria.filter(j => !j.pos.includes("ZONA")).slice(0, 5);
+
+            if (top5.length > 0) {
+                let htmlTabla = `
+                    <div style="margin-top: 0.5rem;">
+                        <h3 style="font-size: 0.95rem; color: var(--neon-naranja); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                            <span class="material-symbols-outlined" style="font-size: 1.2rem;">analytics</span> TABLA COMPARATIVA TOP 5
+                        </h3>
+                        <table class="top5-table">
+                            <thead>
+                                <tr>
+                                    <th>Puesto</th>
+                                    <th>Nombre</th>
+                                    <th>Puntos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                top5.forEach(jugador => {
+                    htmlTabla += `
+                        <tr>
+                            <td style="color: var(--neon-verde); font-weight: bold;">#${jugador.pos}</td>
+                            <td style="color: #ffffff;">${jugador.nombre}</td>
+                            <td style="color: #ffffff; font-weight: bold; text-align: right; padding-right: 15px;">${jugador.pts} pts</td>
+                        </tr>
+                    `;
+                });
+                htmlTabla += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                contenedor.innerHTML += htmlTabla;
+            }
+        }
+
+        function renderizarTarjetas(lista, contenedor) {
+            lista.forEach(jugador => {
+                const tarjeta = document.createElement('div');
+                const esDobles = jugador.cat.includes("DOBLES") || jugador.nombre.includes("/");
+                
+                tarjeta.className = esDobles ? 'data-card dobles-card' : 'data-card individual-card';
+                
+                let extraHtml = esDobles ? `<div class="team-info">Dupla de Dobles</div>` : "";
+                const posVisual = String(jugador.pos).includes("ZONA") ? jugador.pos : `#${jugador.pos}`;
+
+                // Obtener total dinámico de jugadores por categoría
+                const totalJugadoresCat = baseDatosRanking.filter(j => j.cat === jugador.cat).length;
+
+                tarjeta.innerHTML = `
+                    <h3>${jugador.nombre}</h3>
+                    <div class="data-grid">
+                        <div class="data-cell" style="grid-column: span 3; text-align: left; padding-left: 0.8rem; margin-bottom: 0.2rem;">
+                            <span class="cell-title" style="display: inline-block;">Categoría:</span>
+                            <span class="cell-value" style="color: var(--neon-azul); font-size: 0.85rem; display: inline-block; margin-left: 5px;">${jugador.cat} (${totalJugadoresCat} jugadores)</span>
+                        </div>
+                        <div class="data-cell">
+                            <span class="cell-title">Puesto</span>
+                            <span class="cell-value posicion-fija">${posVisual}</span>
+                        </div>
+                        <div class="data-cell" style="grid-column: span 2;">
+                            <span class="cell-title">Puntos Oficiales</span>
+                            <span class="cell-value">${jugador.pts} pts</span>
+                        </div>
+                        ${extraHtml}
+                    </div>
+                `;
+                contenedor.appendChild(tarjeta);
+            });
+        }
     </script>
 </body>
 </html>
+
